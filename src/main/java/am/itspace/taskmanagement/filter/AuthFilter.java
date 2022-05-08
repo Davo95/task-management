@@ -1,4 +1,4 @@
-package am.itspace.userbook.filter;
+package am.itspace.taskmanagement.filter;
 
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
@@ -6,7 +6,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebFilter(urlPatterns = {"/", "/addBook", "/deleteBook", "/updateBook", "/home", "/singleBook"})
+@WebFilter(urlPatterns = {"/", "/addTask","/addUser", "/deleteTask", "/updateTask", "/home", "/singleBook"})
 public class AuthFilter implements Filter {
 
     @Override

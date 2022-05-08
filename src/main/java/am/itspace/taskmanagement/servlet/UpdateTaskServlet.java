@@ -1,61 +1,47 @@
 package am.itspace.taskmanagement.servlet;
 
+import am.itspace.taskmanagement.manager.TaskManager;
 import am.itspace.taskmanagement.model.Task;
-import am.itspace.userbook.manager.BookManager;
-import am.itspace.userbook.model.Book;
+import am.itspace.taskmanagement.model.TaskStatus;
 
 import javax.servlet.ServletException;
-import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.Part;
 import java.io.IOException;
 
-@WebServlet(urlPatterns = "/updateBook")
-@MultipartConfig(
-        fileSizeThreshold = 1024 * 1024 * 1, // 1 MB
-        maxFileSize = 1024 * 1024 * 10,      // 10 MB
-        maxRequestSize = 1024 * 1024 * 100   // 100 MB
-)
-public class UpdatetAaskServlet extends HttpServlet {
+@WebServlet(urlPatterns = "/updateTask")
+public class UpdateTaskServlet extends HttpServlet {
 
-    private static final String UPLOAD_DIR = "D:\\homework\\UserBook\\upload/";
-    private TaskServlet taskServlet = new TaskServlet();
+    private TaskManager taskManager = new TaskManager();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        int bookId = Integer.parseInt(req.getParameter("id"));
-        Task task = taskServlet.getTaskById(bookId);
+        int taskId = Integer.parseInt(req.getParameter("id"));
+        Task task = taskManager.getTaskById(taskId);
         req.setAttribute("task", task);
-        req.getRequestDispatcher("/WEB-INF/updateBook.jsp").forward(req, resp);
+        req.getRequestDispatcher("/WEB-INF/updateTask.jsp").forward(req, resp);
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        int bookId = Integer.parseInt(req.getParameter("id"));
-        Book bookById = taskServlet.getBookById(bookId);
-        if (bookById != null){
+        int taskId = Integer.parseInt(req.getParameter("id"));
+        Task taskById = taskManager.getTaskById(taskId);
+        if (taskById != null) {
 
-            Part filePart = req.getPart("picture");
-            String fileName = filePart.getSubmittedFileName();
-            String picUrl = System.currentTimeMillis() + "_" + fileName;
-            filePart.write(UPLOAD_DIR + picUrl);
+            String name = req.getParameter("name");
+            String description = req.getParameter("description");
+            String status = req.getParameter("status");
 
-            String title = req.getParameter("title");
-            String authorName = req.getParameter("authorName");
-            double price = Double.parseDouble(req.getParameter("price"));
-
-            Book book = Book.builder()
-                    .id(bookId)
-                    .title(title)
-                    .authorName(authorName)
-                    .price(price)
-                    .picUrl(picUrl)
+            Task task = Task.builder()
+                    .id(taskId)
+                    .name(name)
+                    .description(description)
+                    .status(TaskStatus.valueOf(status))
                     .build();
-            taskServlet.addBook(book);
-            req.getSession().setAttribute("smg", "Book was updated");
+            taskManager.addTask(task);
+            req.getSession().setAttribute("smg", "Task was updated");
             resp.sendRedirect("/home");
         }
     }

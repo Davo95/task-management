@@ -218,7 +218,10 @@
                         </td>
                         <td><%=task.getUser().getSurname()%>
                         </td>
-                        <td><a class="delete" title="Delete" data-toggle="tooltip" href="/deleteTask?id=<%=task.getId()%>"><i
+                        <td>
+                            <a class="edit" title="Update" data-toggle="tooltip" href="/updateTask?id=<%=task.getId()%>"><i
+                                    class="material-icons">&#xE254;</i></a>
+                            <a class="delete" title="Delete" data-toggle="tooltip" href="/deleteTask?id=<%=task.getId()%>"><i
                                 class="material-icons">&#xE872;</i></a>
                         </td>
                     </tr>

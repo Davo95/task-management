@@ -17,9 +17,9 @@ public class DeleteTaskServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        int bookId = Integer.parseInt(req.getParameter("id"));
+        int taskId = Integer.parseInt(req.getParameter("id"));
         try {
-            taskManager.deleteTask(bookId);
+            taskManager.deleteTask(taskId);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
