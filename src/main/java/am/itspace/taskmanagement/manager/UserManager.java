@@ -33,6 +33,24 @@ public class UserManager {
         }
     }
 
+    public List<User> getAllUser() throws SQLException {
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery("SELECT * FROM user");
+            List<User> users = new ArrayList<>();
+            while (resultSet.next()){
+                User user = new User();
+                user.setId(resultSet.getInt("id"));
+                user.setName(resultSet.getString("name"));
+                user.setSurname(resultSet.getString("surname"));
+                user.setUserType(UserType.valueOf(resultSet.getString("user_type")));
+                user.setEmail(resultSet.getString("email"));
+                user.setPassword(resultSet.getString("password"));
+                users.add(user);
+            }
+            return users;
+
+    }
+
     public void updateUser(User user) {
         try {
             Statement statement = connection.createStatement();

@@ -26,22 +26,22 @@ public class UserServlet extends HttpServlet {
         String name = req.getParameter("name");
         String surname = req.getParameter("surname");
         String email = req.getParameter("email");
+        String userType = req.getParameter("user_type");
         String password = req.getParameter("password");
         String rePassword = req.getParameter("re-password");
         if (!password.equals(rePassword)) {
             req.getSession().setAttribute("msg", "password are not match");
             resp.sendRedirect("/");
         }else {
-            User user = User.builder()
+            userManager.addUser(User.builder()
                     .name(name)
                     .surname(surname)
-                    .userType(UserType.USER)
+                    .userType(UserType.valueOf(userType))
                     .email(email)
                     .password(password)
-                    .build();
-            userManager.addUser(user);
+                    .build());
             req.getSession().setAttribute("msg", "User was register successfully");
-            resp.sendRedirect("/home");
+            resp.sendRedirect("/admin");
         }
     }
 }

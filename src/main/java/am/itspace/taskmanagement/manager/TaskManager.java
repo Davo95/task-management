@@ -5,8 +5,10 @@ import am.itspace.taskmanagement.model.Task;
 import am.itspace.taskmanagement.model.TaskStatus;
 
 import java.sql.*;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class TaskManager {
@@ -23,7 +25,7 @@ public class TaskManager {
             preparedStatement.setString(2, task.getDescription());
             preparedStatement.setString(3, sdf.format(task.getDeadline()));
             preparedStatement.setString(4, task.getStatus().name());
-            preparedStatement.setInt(5, task.getUser().getId());
+            preparedStatement.setInt(5, task.getUserId().getId());
             System.out.println(query);
             preparedStatement.executeUpdate();
             ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
@@ -36,16 +38,48 @@ public class TaskManager {
         }
     }
 
-    public void updateTask(Task task) {
-        try {
-            Statement statement = connection.createStatement();
-            String query = String.format("UPDATE task SET name = '%s',description = '%s',status = '%s' WHERE id = " + task.getId(),
-                    task.getName(), task.getDescription(), task.getStatus());
-            System.out.println(query);
-            statement.executeUpdate(query);
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
+    public List<Task> getAllTask() throws SQLException {
+        Statement statement = connection.createStatement();
+        ResultSet resultSet = statement.executeQuery("SELECT * FROM task");
+        return getTasksFromTask(resultSet);
+    }
+
+    public List<Task> getAllTaskByUserId(int userId) throws SQLException {
+        PreparedStatement statement = connection.prepareStatement("SELECT * FROM task where user_id=?");
+        statement.setInt(1, userId);
+        ResultSet resultSet = statement.executeQuery();
+        return getTasksFromTask(resultSet);
+    }
+
+    private List<Task> getTasksFromTask(ResultSet resultSet) throws SQLException {
+        List<Task> tasks = new ArrayList<>();
+        while (resultSet.next()) {
+            Task task = new Task();
+            task.setId(resultSet.getInt("id"));
+            task.setName(resultSet.getString("name"));
+            task.setDescription(resultSet.getString("description"));
+            try {
+                task.setDeadline(sdf.parse(resultSet.getString("deadline")));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            task.setStatus(TaskStatus.valueOf(resultSet.getString("status")));
+            task.setUserId(userManager.getUserById(resultSet.getInt("user_id")));
+            tasks.add(task);
         }
+        return tasks;
+    }
+
+    public void updateTask(int taskId, String newStatus) {
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement("UPDATE task set status = ? where id = ?");
+            preparedStatement.setString(1, newStatus);
+            preparedStatement.setInt(2, taskId);
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
     }
 
     public List<Task> getTask() {
@@ -61,7 +95,7 @@ public class TaskManager {
                         .description(resultSet.getString(3))
                         .deadline(resultSet.getDate(4))
                         .status(TaskStatus.valueOf(resultSet.getString(5)))
-                        .user(userManager.getUserById(resultSet.getInt(6)))
+                        .userId(userManager.getUserById(resultSet.getInt(6)))
                         .build();
                 result.add(task);
             }
@@ -83,7 +117,7 @@ public class TaskManager {
                         .description(resultSet.getString(3))
                         .deadline(resultSet.getDate(4))
                         .status(TaskStatus.valueOf(resultSet.getString(5)))
-                        .user(userManager.getUserById(resultSet.getInt(6)))
+                        .userId(userManager.getUserById(resultSet.getInt(6)))
                         .build();
             }
         } catch (SQLException e) {

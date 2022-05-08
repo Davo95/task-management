@@ -24,6 +24,6 @@ public class DeleteTaskServlet extends HttpServlet {
             throw new RuntimeException(e);
         }
         req.getSession().setAttribute("msg","Task was remove");
-        resp.sendRedirect("/home");
+        resp.sendRedirect("/admin");
     }
 }

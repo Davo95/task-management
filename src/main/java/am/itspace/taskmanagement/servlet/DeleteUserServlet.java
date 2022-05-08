@@ -1,6 +1,7 @@
 package am.itspace.taskmanagement.servlet;
 
 import am.itspace.taskmanagement.manager.TaskManager;
+import am.itspace.taskmanagement.manager.UserManager;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -13,17 +14,17 @@ import java.sql.SQLException;
 @WebServlet(urlPatterns = "/deleteUser")
 public class DeleteUserServlet extends HttpServlet {
 
-    private TaskManager taskManager = new TaskManager();
+    private UserManager userManager = new UserManager();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         int userId = Integer.parseInt(req.getParameter("id"));
         try {
-            taskManager.deleteTask(userId);
+            userManager.deleteUser(userId);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
         req.getSession().setAttribute("msg","User was remove");
-        resp.sendRedirect("/home");
+        resp.sendRedirect("/admin");
     }
 }

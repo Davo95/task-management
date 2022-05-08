@@ -13,8 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
+
 
 @WebServlet(urlPatterns = "/addTask")
 public class TaskServlet extends HttpServlet {
@@ -34,15 +33,19 @@ public class TaskServlet extends HttpServlet {
         String name = req.getParameter("name");
         String description = req.getParameter("description");
         String status = req.getParameter("status");
+        String deadline = req.getParameter("deadline");
 
-        Task tasks = Task.builder()
-                .name(name)
-                .description(description)
-                .deadline(new Date())
-                .status(TaskStatus.valueOf(status))
-                .user(user)
-                .build();
-        taskManager.addTask(tasks);
+        try {
+            taskManager.addTask(Task.builder()
+                    .name(name)
+                    .description(description)
+                    .deadline(sdf.parse(deadline))
+                    .status(TaskStatus.valueOf(status))
+                    .userId(user)
+                    .build());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
         req.getSession().setAttribute("smg", "Task was added");
         resp.sendRedirect("/home");
     }

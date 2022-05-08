@@ -164,7 +164,8 @@
     <div class="shape"></div>
     <div class="shape"></div>
 </div>
-<form action="/updateTask" method="post" enctype="multipart/form-data">
+<form action="/updateTask" method="post">
+    <h5><a href="/logout">Logout</a></h5>
     <h3>Update Task</h3>
     <input type="hidden" name="id" value="<%=task.getId()%>">
     <input type="text" placeholder="Name" name="name" value="<%=task.getName()%>">
@@ -177,8 +178,5 @@
     </datalist>
     <button>update Task</button>
 </form>
-</body>
-</html>
-
 </body>
 </html>

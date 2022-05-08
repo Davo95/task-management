@@ -123,58 +123,7 @@
 </head>
 
 <body>
-<% List<User> users = (List<User>) request.getAttribute("users"); %>
 <% List<Task> tasks = (List<Task>) request.getAttribute("tasks"); %>
-<div class="container-lg">
-    <div class="table-responsive">
-        <div class="table-wrapper">
-            <div class="table-title">
-                <div class="row">
-                    <div class="col-sm-8">
-                        <h2>User <b>Management</b></h2>
-                    </div>
-                    <div class="col-sm-4">
-                        <button class="btn btn-info add-new"><i class="fa fa-plus"></i>
-                            <a href="/addUser" style="color: white">Add User</a></button>
-
-                    </div>
-                </div>
-            </div>
-
-            <table class="table table-bordered">
-                <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Surname</th>
-                    <th>Email</th>
-                    <th>User Type</th>
-                    <th>Delete</th>
-                </tr>
-                    <% if (users != null && !users.isEmpty()) {
-                        for (User user : users) {
-                    %>
-                    <tr>
-                        <td><%=user.getName()%>
-                        </td>
-                        <td><%=user.getSurname()%>
-                        </td>
-                        <td><%=user.getEmail()%>
-                        </td>
-                        <td><%=user.getUserType()%>
-                        </td>
-                        <td><a class="delete" title="Delete" data-toggle="tooltip" href="/deleteUser?id=<%=user.getId()%>"><i
-                                class="material-icons">&#xE872;</i></a>
-                        </td>
-                    </tr>
-                    <%
-                            }
-                        }
-                    %>
-                </thead>
-            </table>
-        </div>
-    </div>
-</div>
 <div class="container-lg">
     <div class="table-responsive">
         <div class="table-wrapper">
@@ -184,6 +133,8 @@
                         <h2>Task <b>Management</b></h2>
                     </div>
                     <div class="col-sm-4">
+                        <button class="btn btn-info add-new"><i class="fa fa-plus"></i>
+                            <a href="/logout" style="color: white">Logout</a></button>
                         <button class="btn btn-info add-new"><i class="fa fa-plus"></i>
                             <a href="/addTask" style="color: white">Add Task</a></button>
 
@@ -214,9 +165,9 @@
                         </td>
                         <td><%=task.getStatus()%>
                         </td>
-                        <td><%=task.getUser().getName()%>
+                        <td><%=task.getUserId().getName()%>
                         </td>
-                        <td><%=task.getUser().getSurname()%>
+                        <td><%=task.getUserId().getSurname()%>
                         </td>
                         <td>
                             <a class="edit" title="Update" data-toggle="tooltip" href="/updateTask?id=<%=task.getId()%>"><i

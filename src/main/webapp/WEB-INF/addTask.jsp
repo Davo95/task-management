@@ -140,9 +140,11 @@
     <div class="shape"></div>
 </div>
 <form action="/addTask" method="post">
+    <h5><a href="/logout">Logout</a></h5>
     <h3>Add Task</h3>
     <input type="text" placeholder="Name" name="name">
     <input type="text" placeholder="Description" name="description">
+    <input type="date" placeholder="deadline" name="deadline">
     <input list="status" placeholder="Status" name="status">
     <datalist id="status">
         <option value="IT">
